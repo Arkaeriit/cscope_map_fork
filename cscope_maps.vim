@@ -59,6 +59,7 @@ if has("cscope")
     else
         call Find_CS_DB()
         if filereadable(s:cscope_db_path)
+            set csre " Needed to ensure that cscope can read relative path from the DB
             let s:getting_db_cmd = 'cs add ' . s:cscope_db_path
             execute s:getting_db_cmd
         endif
