@@ -14,10 +14,7 @@ The search for the new data_base is added by calling the function 'find_db'.
 """
 
 import os.path
-try:
-    import vim
-except:
-    pass
+import vim
 
 TARGET = "cscope.out"
 
@@ -69,15 +66,15 @@ def print_all_form_here():
     pwd = os.path.realpath(".")
     print_all_until_root(pwd)
 
-if __name__ == "__main__":
-    print_all_form_here()
-    print("|", crawl_from_here(), "|")
-
 # ------------------------------ Vim integration ----------------------------- #
 
 def update_target_name():
-    TARGET = vim.var['cscope_db_name_target']
+    TARGET = vim.vars['cscope_db_name_target']
 
 def find_db():
-    vim.var['cscope_out_root_dir'] = crawl_from_here()
+    vim.vars['cscope_out_root_dir'] = crawl_from_here()
+
+if __name__ == "__main__":
+    update_target_name()
+    find_db()
 

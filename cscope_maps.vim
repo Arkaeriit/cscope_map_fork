@@ -23,6 +23,21 @@
 " Jason Duell       jduell@alumni.princeton.edu     2002/3/7
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+if $CSCOPE_DB != ""
+    let s:cscope_db_name = $CSCOPE_DB
+else
+    let s:cscope_db_name = "cscope.out"
+endif
+
+let s:current_plugin_path = expand('<sfile>:p:h')
+
+function Find_CS_DB()
+    let g:cscope_db_name_target = s:cscope_db_name
+    let l:py_script = s:current_plugin_path . "/find_cscope_out.py"
+    let l:python_exec_cmd = 'py3file ' . l:py_script
+    execute l:python_exec_cmd
+    let s:cscope_db_updated = g:cscope_out_root_dir . "/" . s:cscope_db_name
+endfunction
 
 " This tests to see if vim was configured with the '--enable-cscope' option
 " when it was compiled.  If it wasn't, time to recompile vim... 
@@ -38,11 +53,15 @@ if has("cscope")
     set csto=0
 
     " add any cscope database in current directory
-    if filereadable("cscope.out")
+    if filereadable(s:cscope_db_name)
         cs add cscope.out  
     " else add the database pointed to by environment variable 
-    elseif $CSCOPE_DB != ""
-        cs add $CSCOPE_DB
+    else
+        call Find_CS_DB()
+        if filereadable(s:cscope_db_updated)
+            let s:getting_db_cmd = 'cs add ' . s:cscope_db_updated
+            execute s:getting_db_cmd
+        endif
     endif
 
     " show msg when any other cscope db added
