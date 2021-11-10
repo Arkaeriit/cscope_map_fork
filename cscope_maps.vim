@@ -36,7 +36,7 @@ function Find_CS_DB()
     let l:py_script = s:current_plugin_path . "/find_cscope_out.py"
     let l:python_exec_cmd = 'py3file ' . l:py_script
     execute l:python_exec_cmd
-    let s:cscope_db_updated = g:cscope_out_root_dir . "/" . s:cscope_db_name
+    let s:cscope_db_path = g:cscope_out_root_dir . "/" . s:cscope_db_name
 endfunction
 
 " This tests to see if vim was configured with the '--enable-cscope' option
@@ -55,11 +55,11 @@ if has("cscope")
     " add any cscope database in current directory
     if filereadable(s:cscope_db_name)
         cs add cscope.out  
-    " else add the database pointed to by environment variable 
+    " else find it in an other folder
     else
         call Find_CS_DB()
         if filereadable(s:cscope_db_updated)
-            let s:getting_db_cmd = 'cs add ' . s:cscope_db_updated
+            let s:getting_db_cmd = 'cs add ' . s:cscope_db_path
             execute s:getting_db_cmd
         endif
     endif
