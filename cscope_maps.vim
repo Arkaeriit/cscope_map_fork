@@ -58,7 +58,7 @@ if has("cscope")
     " else find it in an other folder
     else
         call Find_CS_DB()
-        if filereadable(s:cscope_db_updated)
+        if filereadable(s:cscope_db_path)
             let s:getting_db_cmd = 'cs add ' . s:cscope_db_path
             execute s:getting_db_cmd
         endif
