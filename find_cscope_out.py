@@ -5,10 +5,19 @@ root until a file name 'cscope.out' is found. Then, the name of the directory
 where the csope.out file is found is exported in the variable
 'g:cscope_out_roor_dir'. This is meant to work on Windows or UNIX systems but I
 only tested it on Linux.
+
+The name of the target is 'cscope.out' by default but it can be updated from
+Vim by setting it in the variable 'g:cscope_db_name_target' and calling
+the function 'update_target_name'.
+
+The search for the new data_base is added by calling the function 'find_db'.
 """
 
 import os.path
-#import vim
+try:
+    import vim
+except:
+    pass
 
 TARGET = "cscope.out"
 
@@ -66,7 +75,9 @@ if __name__ == "__main__":
 
 # ------------------------------ Vim integration ----------------------------- #
 
+def update_target_name():
+    TARGET = vim.var['cscope_db_name_target']
 
-
-
+def find_db():
+    vim.var['cscope_out_root_dir'] = crawl_from_here()
 
