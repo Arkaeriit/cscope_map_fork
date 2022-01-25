@@ -39,6 +39,26 @@ function Find_CS_DB()
     let s:cscope_db_path = g:cscope_out_root_dir . "/" . s:cscope_db_name
 endfunction
 
+function Update_CS_DB()
+    let l:py_script = s:current_plugin_path . "/update_cscope_smart.py"
+    let l:python_exec_cmd = 'py3file ' . l:py_script
+    execute l:python_exec_cmd
+endfunction
+
+function Add_Cscope_DB()
+    if filereadable(s:cscope_db_name)
+        cs add cscope.out  
+    " else find it in an other folder
+    else
+        call Find_CS_DB()
+        if filereadable(s:cscope_db_path)
+            set csre " Needed to ensure that cscope can read relative path from the DB
+            let s:getting_db_cmd = 'cs add ' . s:cscope_db_path
+            execute s:getting_db_cmd
+        endif
+    endif
+endfunction
+
 " This tests to see if vim was configured with the '--enable-cscope' option
 " when it was compiled.  If it wasn't, time to recompile vim... 
 if has("cscope")
@@ -53,20 +73,13 @@ if has("cscope")
     set csto=0
 
     " add any cscope database in current directory
-    if filereadable(s:cscope_db_name)
-        cs add cscope.out  
-    " else find it in an other folder
-    else
-        call Find_CS_DB()
-        if filereadable(s:cscope_db_path)
-            set csre " Needed to ensure that cscope can read relative path from the DB
-            let s:getting_db_cmd = 'cs add ' . s:cscope_db_path
-            execute s:getting_db_cmd
-        endif
-    endif
+    call Add_Cscope_DB()
 
     " show msg when any other cscope db added
-    set cscopeverbose  
+    set cscopeverbose
+    nnoremap <C-@>r :call Update_CS_DB()<Cr>:cs kill -1<Cr><Cr>:call Add_Cscope_DB()<Cr>:echom "Cscope DB updated."<Cr>
+
+    """ With <Ctrl-space>r the scope database is updated
 
 
     """"""""""""" My cscope/vim key mappings
