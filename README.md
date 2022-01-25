@@ -8,3 +8,5 @@ The main modification I made was to let the script crawl from the working direct
 
 I also inverted `ctrl+\` and `ctrl+<space>` to better suit my need.
 
+Furthermore, the key combination `<C-@>r` regenerated the cscope database.
+
