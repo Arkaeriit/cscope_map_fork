@@ -29,18 +29,18 @@ else
     let s:cscope_db_name = "cscope.out"
 endif
 
-let s:current_plugin_path = expand('<sfile>:p:h')
+let g:cscope_script_dir = expand('<sfile>:p:h')
 
 function Find_CS_DB()
     let g:cscope_db_name_target = s:cscope_db_name
-    let l:py_script = s:current_plugin_path . "/find_cscope_out.py"
+    let l:py_script = g:cscope_script_dir . "/find_cscope_out.py"
     let l:python_exec_cmd = 'py3file ' . l:py_script
     execute l:python_exec_cmd
     let s:cscope_db_path = g:cscope_out_root_dir . "/" . s:cscope_db_name
 endfunction
 
 function Update_CS_DB()
-    let l:py_script = s:current_plugin_path . "/update_cscope_smart.py"
+    let l:py_script = g:cscope_script_dir . "/update_cscope_smart.py"
     let l:python_exec_cmd = 'py3file ' . l:py_script
     execute l:python_exec_cmd
 endfunction

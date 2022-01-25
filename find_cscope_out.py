@@ -13,58 +13,15 @@ the function 'update_target_name'.
 The search for the new data_base is added by calling the function 'find_db'.
 """
 
-import os.path
+import sys
 import vim
 
+# Import local lib
+path = vim.vars['cscope_script_dir'].decode("UTF-8")
+sys.path.append(path)
+import path_lib
+
 TARGET = "cscope.out"
-
-# ----------------------------- Data manipulation ---------------------------- #
-
-def clean_base_dir(path):
-    """Assuming path is a dir, return its wihh no trailing slashes."""
-    return os.path.dirname(path + '/')
-
-def is_root(path):
-    """Tells if the given path is a root directory."""
-    raw_dir = os.path.splitdrive(clean_base_dir(path))[1]
-    return raw_dir == "/" or raw_dir == "//"
-
-def is_target_in_dir(path):
-    """Tells if the file whose name is in the TARGET variable is in the current dir."""
-    target_path = clean_base_dir(path) + '/' + TARGET
-    return os.path.exists(target_path)
-
-def get_previous_dir(path):
-    """Return the path of the directory where the given path is."""
-    return os.path.dirname(clean_base_dir(path))
-
-def crawler(path):
-    """Cralls from the given path until the TARGET file is found.
-    If the TARGET is found, the name of the dir where it is is
-    returned. Otherwize, an empty string is returned."""
-    if is_target_in_dir(path):
-        return clean_base_dir(path)
-    if is_root(path):
-        return ''
-    return crawler(get_previous_dir(path))
-
-def crawl_from_here():
-    """Calls the cralwer function from the current dirrectory."""
-    pwd = os.path.realpath(".")
-    return crawler(pwd)
-
-# ---------------------------------- Testing --------------------------------- #
-
-def print_all_until_root(path):
-    """Prints the name of all dirs from the path to the root"""
-    print(path)
-    if not is_root(path):
-        print_all_until_root(get_previous_dir(path))
-
-def print_all_form_here():
-    """Prints the name of all dirs from the current dir to the root"""
-    pwd = os.path.realpath(".")
-    print_all_until_root(pwd)
 
 # ------------------------------ Vim integration ----------------------------- #
 
@@ -72,7 +29,7 @@ def update_target_name():
     TARGET = vim.vars['cscope_db_name_target']
 
 def find_db():
-    vim.vars['cscope_out_root_dir'] = crawl_from_here()
+    vim.vars['cscope_out_root_dir'] = path_lib.crawl_from_here(TARGET)
 
 if __name__ == "__main__":
     update_target_name()
