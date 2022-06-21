@@ -24,19 +24,18 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 if $CSCOPE_DB != ""
-    let s:cscope_db_name = $CSCOPE_DB
+    let g:cscope_db_name_target = $CSCOPE_DB
 else
-    let s:cscope_db_name = "cscope.out"
+    let g:cscope_db_name_target = "cscope.out"
 endif
 
 let g:cscope_script_dir = expand('<sfile>:p:h')
 
 function Find_CS_DB()
-    let g:cscope_db_name_target = s:cscope_db_name
     let l:py_script = g:cscope_script_dir . "/find_cscope_out.py"
     let l:python_exec_cmd = 'py3file ' . l:py_script
     execute l:python_exec_cmd
-    let s:cscope_db_path = g:cscope_out_root_dir . "/" . s:cscope_db_name
+    let s:cscope_db_path = g:cscope_out_root_dir . "/" . g:cscope_db_name_target
 endfunction
 
 function Update_CS_DB()
@@ -46,7 +45,7 @@ function Update_CS_DB()
 endfunction
 
 function Add_Cscope_DB()
-    if filereadable(s:cscope_db_name)
+    if filereadable(g:cscope_db_name_target)
         cs add cscope.out  
     " else find it in an other folder
     else
