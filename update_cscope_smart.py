@@ -26,8 +26,12 @@ if __name__ == "__main__":
     if target_dir == "":
         print("No cscope.out found.")
         sys.exit(1)
+        
     script = "cd " + target_dir + " &&\n"
-    script += "    cscope -Rb -f" + TARGET + "&& \n"
+    script += "    namefile=$(mktemp) && \n"
+    script += "    echo $(find -name '*.c') $(find -name '*.h') $(find -name '*.cpp') $(find -name '*.hpp') $(find -name '*.go') $(find -name '*.rs') $(find -name '*.py') > $namefile"
+    script +=f"    cscope -Rb -inamefile -f {TARGET} && \n"
+    script += "    rm $namefile && \n"
     script += "    cd - > /dev/null\n"
     os.system(script)
 
