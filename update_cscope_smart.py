@@ -7,6 +7,7 @@ Then a shell script jumps to that definition and update the db.
 
 import sys
 import os
+import tempfile
 
 # Import local lib
 path = vim.vars['cscope_script_dir'].decode("UTF-8")
@@ -14,6 +15,7 @@ sys.path.append(path)
 import path_lib
 
 TARGET = "cscope.out"
+FILE_REGEX = r".*\.(c|h|cpp|hpp|go|rs|py)$"
 
 # ---------------------------------- Actions --------------------------------- #
 
@@ -26,12 +28,20 @@ if __name__ == "__main__":
     if target_dir == "":
         print("No cscope.out found.")
         sys.exit(1)
+
+    lst_searched_files = path_lib.find(target_dir, FILE_REGEX)
+    namefile = tempfile.mkstemp()[1]
+    with open(namefile, "w") as f:
+        for file in lst_searched_files:
+            if not os.path.islink(file):
+                file = file.replace(path_lib.clean_base_dir(target_dir)+"/", "")
+                file = file.replace("\\", "\\\\")
+                file = file.replace('"', '\\"')
+                f.write(f'"{file}"\n')
         
     script = "cd " + target_dir + " &&\n"
-    script += "    namefile=$(mktemp) && \n"
-    script += "    echo $(find -name '*.c') $(find -name '*.h') $(find -name '*.cpp') $(find -name '*.hpp') $(find -name '*.go') $(find -name '*.rs') $(find -name '*.py') > $namefile"
-    script +=f"    cscope -Rb -inamefile -f {TARGET} && \n"
-    script += "    rm $namefile && \n"
+    script +=f"    cscope -Rb -i{namefile} -f {TARGET} && \n"
     script += "    cd - > /dev/null\n"
     os.system(script)
+    os.remove(namefile)
 

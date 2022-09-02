@@ -6,6 +6,7 @@ hierarchy above the current directory.
 """
 
 import os.path
+import re
 
 # ----------------------------- Data manipulation ---------------------------- #
 
@@ -42,6 +43,23 @@ def crawl_from_here(target):
     pwd = os.path.realpath(".")
     return crawler(pwd, target)
 
+def find(path, regex):
+    """Find all the file that comply to the given regex in the given directory
+    and return them in a list. Works recursively. The given regex can be a
+    string or a compiled regex."""
+    ret = []
+    if type(regex) == str:
+        regex = re.compile(regex)
+    if type(regex) != re.Pattern:
+        raise TypeError("Input regex should be a string or a compiled Regex")
+    for file in os.listdir(path):
+        full_path = path+"/"+file
+        if os.path.isdir(full_path):
+            ret += find(full_path, regex)
+        if regex.match(file):
+            ret.append(full_path)
+    return ret
+
 # ---------------------------------- Testing --------------------------------- #
 
 def print_all_until_root(path):
@@ -57,4 +75,5 @@ def print_all_form_here():
 
 if __name__ == "__main__":
     print_all_form_here()
+    print(find("../..", ".*\.py$"))
 
