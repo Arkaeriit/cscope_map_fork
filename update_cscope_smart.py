@@ -15,7 +15,7 @@ sys.path.append(path)
 import path_lib
 
 TARGET = "cscope.out"
-FILE_REGEX = r".*\.(c|h|cpp|hpp|go|rs|py)$"
+FILE_REGEX = r".*\.(c|h|cpp|hpp|go|rs|py|v|nelua)$"
 
 # ---------------------------------- Actions --------------------------------- #
 
