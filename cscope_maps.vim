@@ -77,6 +77,7 @@ if has("cscope")
     " show msg when any other cscope db added
     set cscopeverbose
     nnoremap <C-@>r :call Update_CS_DB()<Cr>:cs kill -1<Cr>:call Add_Cscope_DB()<Cr>:echom "Cscope DB updated."<Cr>
+    nnoremap <C-@>R                         :cs kill -1<Cr>:call Add_Cscope_DB()<Cr>:echom "Cscope DB reloaded."<Cr>
 
     """ With <Ctrl-space>r the scope database is updated
 
