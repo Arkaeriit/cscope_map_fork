@@ -10,3 +10,7 @@ I also inverted `ctrl+\` and `ctrl+<space>` to better suit my need.
 
 Furthermore, the key combination `<C-@>r` regenerates the cscope database and `<C-@>R` re-read it without modifying it.
 
+## Installation
+
+To install this plugin, simply put this repository's directory into your plugin directory. For example, if you are using Pathogen as a plugin manager, put in in `bundle`.
+
