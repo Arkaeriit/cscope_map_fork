@@ -8,9 +8,13 @@ The main modification I made was to let the script crawl from the working direct
 
 I also inverted `ctrl+\` and `ctrl+<space>` to better suit my need.
 
-Furthermore, the key combination `<C-@>r` regenerates the cscope database and `<C-@>R` re-read it without modifying it.
+Furthermore, the key combination `<C-@>r` regenerates the cscope database and `<C-@>R` re-read it without modifying it. If the cscope database is not found, a new one is generated.
 
 ## Installation
 
 To install this plugin, simply put this repository's directory into your plugin directory. For example, if you are using Pathogen as a plugin manager, put in in `bundle`.
+
+## Limitations
+
+Spaces in the path of the cscope database are not well supported.
 
