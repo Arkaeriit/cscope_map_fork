@@ -80,6 +80,10 @@ function cscope_maps#make_binding_letter(letter)
         return 'find i ^<C-R>=expand("<cfile>")<CR><CR>'
     elseif a:letter == 'd'
         return 'find d <C-R>=expand("<cword>")<CR><CR>'
+    elseif a:letter == 'r'
+        return ":call cscope_maps#Update_CS_DB()<Cr>:cs kill -1<Cr>:call cscope_maps#Add_Cscope_DB()<Cr>:echom 'Cscope DB updated.'<Cr>"
+    elseif a:letter == 'R'
+        return ":cs kill -1<Cr>:call cscope_maps#Add_Cscope_DB()<Cr>:echom 'Cscope DB reloaded.'<Cr>"
     else
         echom "Error, invalid input to `make_binding_letter`."
         return "\nNope, lol"
@@ -99,12 +103,25 @@ function cscope_maps#make_vsplit_binding(prefix, letter)
 endfunction
 
 function cscope_maps#bind(letter)
-    execute  cscope_maps#make_full_window_binding(g:cscopeFullKey,     a:letter)
-    execute  cscope_maps#make_full_window_binding(g:cscopeFullKey_alt, a:letter)
-    execute  cscope_maps#make_hsplit_binding(g:cscopeHsplitKey,     a:letter)
-    execute  cscope_maps#make_hsplit_binding(g:cscopeHsplitKey_alt, a:letter)
-    execute  cscope_maps#make_vsplit_binding(g:cscopeVsplitKey,     a:letter)
-    execute  cscope_maps#make_vsplit_binding(g:cscopeVsplitKey_alt, a:letter)
+    execute cscope_maps#make_full_window_binding(g:cscopeFullKey,     a:letter)
+    execute cscope_maps#make_full_window_binding(g:cscopeFullKey_alt, a:letter)
+    execute cscope_maps#make_hsplit_binding(g:cscopeHsplitKey,     a:letter)
+    execute cscope_maps#make_hsplit_binding(g:cscopeHsplitKey_alt, a:letter)
+    execute cscope_maps#make_vsplit_binding(g:cscopeVsplitKey,     a:letter)
+    execute cscope_maps#make_vsplit_binding(g:cscopeVsplitKey_alt, a:letter)
+endfunction
+
+function cscope_maps#bind_reloads(prefix, letter)
+    execute "nnoremap " . a:prefix . a:letter . " " . cscope_maps#make_binding_letter(a:letter)
+endfunction
+
+function cscope_maps#bind_all_reloads(letter)
+    call cscope_maps#bind_reloads(g:cscopeFullKey,       a:letter)
+    call cscope_maps#bind_reloads(g:cscopeFullKey_alt,   a:letter)
+    call cscope_maps#bind_reloads(g:cscopeHsplitKey,     a:letter)
+    call cscope_maps#bind_reloads(g:cscopeHsplitKey_alt, a:letter)
+    call cscope_maps#bind_reloads(g:cscopeVsplitKey,     a:letter)
+    call cscope_maps#bind_reloads(g:cscopeVsplitKey_alt, a:letter)
 endfunction
 
 function cscope_maps#bind_all_letters()
@@ -116,6 +133,8 @@ function cscope_maps#bind_all_letters()
     call cscope_maps#bind("f")
     call cscope_maps#bind("i")
     call cscope_maps#bind("d")
+    call cscope_maps#bind_all_reloads("r")
+    call cscope_maps#bind_all_reloads("R")
 endfunction
 
 function cscope_maps#setup()
@@ -142,11 +161,7 @@ function cscope_maps#setup()
 
         " show msg when any other cscope db added
         set cscopeverbose
-        nnoremap <C-@>r :call cscope_maps#Update_CS_DB()<Cr>:cs kill -1<Cr>:call cscope_maps#Add_Cscope_DB()<Cr>:echom "Cscope DB updated."<Cr>
-        nnoremap <C-@>R                         :cs kill -1<Cr>:call cscope_maps#Add_Cscope_DB()<Cr>:echom "Cscope DB reloaded."<Cr>
-
-        """ With <Ctrl-space>r the scope database is updated
-
+      
 
         """"""""""""" My cscope/vim key mappings
         "
