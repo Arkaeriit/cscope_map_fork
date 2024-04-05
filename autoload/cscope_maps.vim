@@ -98,22 +98,13 @@ function cscope_maps#make_vsplit_binding(prefix, letter)
     return "nnoremap " . a:prefix . a:letter . " :vert scs " . cscope_maps#make_binding_letter(a:letter)
 endfunction
 
-let s:full_prefix = "<C-@>"
-let s:full_prefix_alt = "cscopebindingalt"
-
-let s:hsplit_prefix = "<C-@><C-@>"
-let s:hsplit_prefix_alt = "cscopebindinghalt"
-
-let s:vsplit_prefix = "<C-@><C-@><C-@>"
-let s:vsplit_prefix_alt = "cscopebindingvalt"
-
 function cscope_maps#bind(letter)
-    execute  cscope_maps#make_full_window_binding(s:full_prefix,     a:letter)
-    execute  cscope_maps#make_full_window_binding(s:full_prefix_alt, a:letter)
-    execute  cscope_maps#make_hsplit_binding(s:hsplit_prefix,     a:letter)
-    execute  cscope_maps#make_hsplit_binding(s:hsplit_prefix_alt, a:letter)
-    execute  cscope_maps#make_vsplit_binding(s:vsplit_prefix,     a:letter)
-    execute  cscope_maps#make_vsplit_binding(s:vsplit_prefix_alt, a:letter)
+    execute  cscope_maps#make_full_window_binding(g:cscopeFullKey,     a:letter)
+    execute  cscope_maps#make_full_window_binding(g:cscopeFullKey_alt, a:letter)
+    execute  cscope_maps#make_hsplit_binding(g:cscopeHsplitKey,     a:letter)
+    execute  cscope_maps#make_hsplit_binding(g:cscopeHsplitKey_alt, a:letter)
+    execute  cscope_maps#make_vsplit_binding(g:cscopeVsplitKey,     a:letter)
+    execute  cscope_maps#make_vsplit_binding(g:cscopeVsplitKey_alt, a:letter)
 endfunction
 
 function cscope_maps#bind_all_letters()
@@ -145,9 +136,9 @@ function cscope_maps#setup()
         call cscope_maps#Add_Cscope_DB()
 
         " Remove mapping used to getch the autoload
-        nnoremap <C-@> <Nop>
-        nnoremap <C-@><C-@> <Nop>
-        nnoremap <C-@><C-@><C-@> <Nop>
+        execute "nnoremap " . g:cscopeFullKey   . " <Nop>"
+        execute "nnoremap " . g:cscopeHsplitKey . " <Nop>"
+        execute "nnoremap " . g:cscopeVsplitKey . " <Nop>"
 
         " show msg when any other cscope db added
         set cscopeverbose
